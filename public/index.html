@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL 분석 리포트 생성기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- mermaid.js 라이브러리 추가 (최신 버전) -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+  <script>
+    // mermaid 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose',
+        flowchart: {
+          htmlLabels: true,
+          curve: 'basis',
+          useMaxWidth: true
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>URL 리포트 생성기</h1>
+      <p class="description">경쟁사 웹사이트 URL을 입력하면 자동으로 분석 리포트를 생성합니다</p>
+    </header>
+    
+    <div class="form-container">
+      <form id="analyze-form">
+        <div class="input-group">
+          <input type="url" id="url-input" placeholder="https://example.com" required>
+          <button type="submit" id="analyze-btn" class="submit-btn">분석 시작</button>
+        </div>
+        
+        <div class="options">
+          <label class="option">
+            <input type="checkbox" id="desktop-option" checked>
+            데스크탑 모드로 분석
+          </label>
+          
+          <label class="option">
+            <input type="checkbox" id="ux-option" checked>
+            UX/성능 분석 포함
+          </label>
+        </div>
+        
+        <div id="error-message" class="error"></div>
+      </form>
+    </div>
+    
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>분석 중입니다. 잠시만 기다려주세요...</p>
+    </div>
+    
+    <div id="report-container" class="report-container">
+      <div class="report-header">
+        <h2>분석 결과</h2>
+        <p id="report-url"></p>
+        <p id="report-time"></p>
+      </div>
+      
+      <div class="report-section">
+        <h3>기술 스택</h3>
+        <ul id="tech-list" class="tech-list"></ul>
+      </div>
+      
+      <div class="report-section">
+        <h3>주요 기능</h3>
+        <ul id="feature-list" class="feature-list"></ul>
+      </div>
+      
+      <div class="report-section">
+        <h3>UX 분석</h3>
+        <div class="ux-scores">
+          <div class="ux-score">
+            <div class="score-circle" id="ux-score-circle">
+              <span id="ux-score-value">0</span>
+              <span class="score-label-average">(평균)</span>
+            </div>
+            <div class="score-bars">
+              <div class="score-bar">
+                <span class="score-label">성능</span>
+                <div class="score-track">
+                  <div class="score-fill" id="performance-score" style="width: 0%"></div>
+                </div>
+                <span class="score-value" id="performance-value">0</span>
+              </div>
+              
+              <div class="score-bar">
+                <span class="score-label">접근성</span>
+                <div class="score-track">
+                  <div class="score-fill" id="accessibility-score" style="width: 0%"></div>
+                </div>
+                <span class="score-value" id="accessibility-value">0</span>
+              </div>
+              
+              <div class="score-bar">
+                <span class="score-label">모범 사례</span>
+                <div class="score-track">
+                  <div class="score-fill" id="best-practices-score" style="width: 0%"></div>
+                </div>
+                <span class="score-value" id="best-practices-value">0</span>
+              </div>
+              
+              <div class="score-bar">
+                <span class="score-label">SEO</span>
+                <div class="score-track">
+                  <div class="score-fill" id="seo-score" style="width: 0%"></div>
+                </div>
+                <span class="score-value" id="seo-value">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button id="download-btn" class="download-btn">리포트 다운로드</button>
+    </div>
+    
+    <!-- 기능 흐름 모달 팝업 -->
+    <div id="feature-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="close-modal">&times;</span>
+        <h3 id="feature-modal-title">기능 흐름도</h3>
+        <p id="feature-modal-desc"></p>
+        <div id="flow-chart" class="flow-chart"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- PDF 생성을 위한 jsPDF 라이브러리 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <!-- JavaScript 파일 임포트 -->
+  <script src="js/flowcharts.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/modal.js"></script>
+</body>
+</html>
